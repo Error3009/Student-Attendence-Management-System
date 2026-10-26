@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Attendance Management System | RKGIT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="badge">RKGIT</span>
+      <div>
+        <h1>Student Attendance Management System</h1>
+        <p>Department of Computer Science and Engineering</p>
+      </div>
+    </div>
+    <div class="top-right">
+      <span class="pill" id="modelStatus">Loading AI models…</span>
+      <span class="today" id="todayLabel"></span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="live">Live Attendance</button>
+    <button class="tab" data-tab="enroll">Enroll Student</button>
+    <button class="tab" data-tab="records">Records</button>
+  </nav>
+
+  <main>
+    <!-- LIVE ATTENDANCE -->
+    <section id="tab-live" class="panel active">
+      <div class="grid">
+        <div class="card">
+          <h2>Live camera</h2>
+          <div class="stage">
+            <video id="liveVideo" autoplay playsinline muted></video>
+            <canvas id="overlay"></canvas>
+            <div class="placeholder">Camera is off</div>
+          </div>
+          <div class="row">
+            <button class="btn primary" id="toggleLive" disabled>Start recognition</button>
+            <span class="status" id="liveStatus">Waiting for AI models…</span>
+          </div>
+          <p class="hint">Flow: <b>Capture</b> → <b>Recognize</b> → <b>Record</b>. Unknown faces are labelled “Not Recognized”.</p>
+        </div>
+
+        <div class="card">
+          <h2>Dashboard</h2>
+          <div class="stats">
+            <div class="stat"><span id="sTotal">0</span><small>Students</small></div>
+            <div class="stat ok"><span id="sPresent">0</span><small>Present</small></div>
+            <div class="stat bad"><span id="sAbsent">0</span><small>Absent</small></div>
+          </div>
+          <h3>Today's roster</h3>
+          <ul class="roster" id="roster"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENROLL -->
+    <section id="tab-enroll" class="panel">
+      <div class="grid">
+        <div class="card">
+          <h2>Camera</h2>
+          <div class="stage">
+            <video id="enrollVideo" autoplay playsinline muted></video>
+            <div class="placeholder">Camera is off</div>
+          </div>
+          <div class="row">
+            <button class="btn" id="startEnrollCam">Start camera</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Student details</h2>
+          <label>Roll number
+            <input id="roll" type="text" maxlength="20" placeholder="e.g. CSE2026001" autocomplete="off">
+          </label>
+          <label>Full name
+            <input id="name" type="text" maxlength="60" placeholder="Student name" autocomplete="off">
+          </label>
+          <button class="btn primary" id="enrollBtn" disabled>Capture &amp; enroll</button>
+          <div class="msg" id="enrollMsg"></div>
+          <p class="hint">Six frames are captured automatically. Face the camera in good light and turn your head slightly between shots. Enrolling an existing roll number replaces its face data.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECORDS -->
+    <section id="tab-records" class="panel">
+      <div class="card">
+        <div class="row between">
+          <h2>Attendance records</h2>
+          <div class="row" style="margin:0">
+            <label class="inline">Date <input type="date" id="recDate"></label>
+            <button class="btn primary" id="exportCsv">Download CSV</button>
+          </div>
+        </div>
+        <p class="summary" id="recSummary"></p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Roll No</th><th>Name</th><th>Status</th><th>Time</th><th></th></tr></thead>
+            <tbody id="recordsBody"></tbody>
+          </table>
+        </div>
+        <div class="row between" style="margin-top:18px">
+          <p class="hint" style="margin:0">Data is saved in this browser (localStorage). The CSV has one P/A column per date and opens in Excel.</p>
+          <button class="btn danger" id="clearAll">Clear all data</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>STUDENT ATTENDANCE MANAGEMENT SYSTEM &nbsp;•&nbsp; RKGIT</footer>
+  <div class="toast" id="toast"></div>
+
+  <!-- Face recognition runs fully in the browser (TensorFlow.js based) -->
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
